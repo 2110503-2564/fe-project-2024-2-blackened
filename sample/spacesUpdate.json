@@ -1,0 +1,131 @@
+[
+  {
+    "name": "The Hive Thonglor",
+    "address": "46/9 Sukhumvit 49",
+    "district": "Watthana",
+    "province": "Bangkok",
+    "postalcode": "10110",
+    "tel": "02-662-6062",
+    "opentime": "0900",
+    "closetime": "2100",
+    "rooms": [
+      {
+        "roomNumber": "101",
+        "capacity": 4,
+        "price": 500,
+        "facilities": [
+          "Whiteboard",
+          "TV Screen",
+          "WiFi"
+        ]
+      },
+      {
+        "roomNumber": "102",
+        "capacity": 8,
+        "price": 900,
+        "facilities": [
+          "Projector",
+          "Conference Phone",
+          "WiFi",
+          "Coffee Machine"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "WeWork T-One Building",
+    "address": "8 Sukhumvit 40",
+    "district": "Khlong Toei",
+    "province": "Bangkok",
+    "postalcode": "10110",
+    "tel": "02-234-5678",
+    "opentime": "0800",
+    "closetime": "2200",
+    "rooms": [
+      {
+        "roomNumber": "201",
+        "capacity": 6,
+        "price": 700,
+        "facilities": [
+          "Smart TV",
+          "WiFi",
+          "Standing Desk"
+        ]
+      },
+      {
+        "roomNumber": "202",
+        "capacity": 12,
+        "price": 1200,
+        "facilities": [
+          "Projector",
+          "Video Conference System",
+          "WiFi"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Spaces Chamchuri Square",
+    "address": "319 Phayathai Rd",
+    "district": "Pathumwan",
+    "province": "Bangkok",
+    "postalcode": "10330",
+    "tel": "02-160-0000",
+    "opentime": "0700",
+    "closetime": "2300",
+    "rooms": [
+      {
+        "roomNumber": "301",
+        "capacity": 4,
+        "price": 450,
+        "facilities": [
+          "Whiteboard",
+          "WiFi"
+        ]
+      },
+      {
+        "roomNumber": "302",
+        "capacity": 10,
+        "price": 1000,
+        "facilities": [
+          "Projector",
+          "Sound System",
+          "WiFi",
+          "Printer"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "JustCo @ AIA Sathorn Tower",
+    "address": "11/1 South Sathorn Road",
+    "district": "Sathorn",
+    "province": "Bangkok",
+    "postalcode": "10120",
+    "tel": "02-119-9100",
+    "opentime": "0800",
+    "closetime": "2000",
+    "rooms": [
+      {
+        "roomNumber": "401",
+        "capacity": 6,
+        "price": 800,
+        "facilities": [
+          "Smart Board",
+          "WiFi",
+          "Apple TV"
+        ]
+      },
+      {
+        "roomNumber": "402",
+        "capacity": 15,
+        "price": 1500,
+        "facilities": [
+          "Projector",
+          "Sound System",
+          "Video Conferencing"
+        ]
+      }
+    ]
+  }
+]
