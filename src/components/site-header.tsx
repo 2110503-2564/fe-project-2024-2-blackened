@@ -12,11 +12,11 @@ const SiteHeader = async () => {
       <div className='container-wrapper'>
         <div className='container flex h-14 items-center gap-2 md:gap-4'>
           <MainNav />
-          <div className='ml-auto flex items-center gap-2 md:flex-1 md:justify-end'>
-            <div className='flex flex-none w-auto items-center gap-8 transition-all duration-300'>
+          <div className='ml-auto flex items-center gap-4 md:flex-2 md:justify-end'>
+            <div className='flex flex-none w-auto items-center gap-1 md:gap-8 transition-all duration-300'>
               <CommandMenu />
-              <LoginMenu session={session} />
             </div>
+            <LoginMenu session={session} />
           </div>
         </div>
       </div>

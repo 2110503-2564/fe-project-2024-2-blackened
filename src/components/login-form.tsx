@@ -1,5 +1,5 @@
 'use client'
-import { Eye, EyeOff, Rocket } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Rocket } from 'lucide-react'
 
 import { z } from 'zod'
 import { cn } from '@/lib/utils'
@@ -57,11 +57,13 @@ const LoginForm = ({
         form.reset()
         return
       }
+      router.push('/')
+      router.refresh()
+      toast.success('Welcome to Spaceflow')
     } catch (error) {
       toast.error('Something went wrong, Please try again')
       console.error('Login error:', error)
     } finally {
-      toast.success('Welcome to Spaceflow')
       setIsLoading(false)
     }
   }
@@ -140,8 +142,19 @@ const LoginForm = ({
                 </FormItem>
               )}
             />
-            <Button type='submit' className='w-full cursor-pointer'>
-              Login
+            <Button
+              type='submit'
+              className='w-full cursor-pointer'
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                  Loggin in...
+                </>
+              ) : (
+                'Log in'
+              )}
             </Button>
           </form>
         </Form>

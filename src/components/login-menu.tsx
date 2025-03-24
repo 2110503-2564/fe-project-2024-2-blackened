@@ -23,6 +23,7 @@ import { signOut } from 'next-auth/react'
 import { MouseEvent } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const LoginMenu = ({ session }: { session: Session | null }) => {
   const router = useRouter()
@@ -50,13 +51,23 @@ const LoginMenu = ({ session }: { session: Session | null }) => {
       {session ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className='flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'>
-              <UserTag
-                name={session.user.name}
-                email={session.user.email}
-                logo={session.user.image || '/profile/profile-0.jpg'}
-              />
-              <MoreVertical className='ml-auto size-4' />
+            <div>
+              <div className='grid sm:hidden'>
+                <Avatar className='h-6 w-6 roudned-lg'>
+                  <AvatarImage
+                    src={session.user.image || '/profile/profile-0.jpg'}
+                  />
+                  <AvatarFallback>FB</AvatarFallback>
+                </Avatar>
+              </div>
+              <div className='hidden sm:flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'>
+                <UserTag
+                  name={session.user.name}
+                  email={session.user.email}
+                  logo={session.user.image || '/profile/profile-0.jpg'}
+                />
+                <MoreVertical className='grid ml-auto size-4' />
+              </div>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -91,8 +102,8 @@ const LoginMenu = ({ session }: { session: Session | null }) => {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut />
+              <DropdownMenuItem onClick={handleLogout} className='text-red-600'>
+                <LogOut className='text-red-600' />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -104,7 +115,7 @@ const LoginMenu = ({ session }: { session: Session | null }) => {
           className='flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground'
         >
           <CircleUser className='h-5 w-5' />
-          <div className='grid flex-1 text-left text-sm leading-tight'>
+          <div className='hidden sm:grid flex-1 text-left text-sm leading-tight'>
             <span className='truncate text-sm'>Sign in</span>
           </div>
         </Link>

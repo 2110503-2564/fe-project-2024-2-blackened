@@ -33,7 +33,7 @@ const ReservationActions = ({ space_id }: { space_id: string }) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className='text-red-600'>
-          <X className='mr-2 h-4 w-4' />
+          <X className='mr-2 h-4 w-4 text-red-600' />
           Cancel Reservation
         </DropdownMenuItem>
       </DropdownMenuContent>
