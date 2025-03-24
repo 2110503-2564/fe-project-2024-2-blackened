@@ -14,7 +14,7 @@ import {
 } from './ui/command'
 import { useRouter } from 'next/navigation'
 import { commandConfig } from '@/config/commands'
-import { File } from 'lucide-react'
+import { File, LogIn, LogOut } from 'lucide-react'
 
 const CommandMenu = ({ ...props }: DialogProps) => {
   const router = useRouter()
@@ -64,7 +64,7 @@ const CommandMenu = ({ ...props }: DialogProps) => {
         <CommandInput placeholder='Type a command or search...' />
         <CommandList>
           <CommandEmpty>No result found.</CommandEmpty>
-          <CommandGroup heading='links'>
+          <CommandGroup heading='Links'>
             {commandConfig.mainNav.map((navItem) => (
               <CommandItem
                 key={navItem.href}
@@ -77,6 +77,20 @@ const CommandMenu = ({ ...props }: DialogProps) => {
                 {navItem.title}
               </CommandItem>
             ))}
+          </CommandGroup>
+          <CommandGroup heading='Authentication'>
+            <CommandItem
+              onSelect={() => runCommand(() => router.push('/login'))}
+            >
+              <LogIn />
+              Log in
+            </CommandItem>
+            <CommandItem
+              onSelect={() => runCommand(() => router.push('/logout'))}
+            >
+              <LogOut />
+              Log out
+            </CommandItem>
           </CommandGroup>
         </CommandList>
       </CommandDialog>

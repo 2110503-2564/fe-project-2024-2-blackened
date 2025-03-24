@@ -2,11 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const UserTag = ({
   logo,
-  username,
+  name,
   email,
 }: {
   logo: string
-  username: string
+  name: string
   email: string
 }) => {
   return (
@@ -16,7 +16,7 @@ const UserTag = ({
         <AvatarFallback>FB</AvatarFallback>
       </Avatar>
       <div className='grid flex-1 text-left text-sm leading-tight'>
-        <span className='truncate'>{username}</span>
+        <span className='truncate'>{name}</span>
         <span className='truncate text-xs text-muted-foreground'>{email}</span>
       </div>
     </>
