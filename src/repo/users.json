@@ -1,8 +1,19 @@
 [
   {
     "_id": "001",
-    "username": "sn0wvy",
+    "name": "sn0wvy",
     "email": "admin@spaceflow.me",
-    "role": "admin"
+    "password": "1234",
+    "phone": "01123456",
+    "role": "admin",
+    "image": "/profile/profile-1.jpg"
+  },
+  {
+    "_id": "002",
+    "name": "P@nd0ra",
+    "email": "user@spaceflow.me",
+    "password": "1234",
+    "phone": "01123456",
+    "role": "user"
   }
 ]
