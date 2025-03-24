@@ -4,7 +4,10 @@ import SiteHeader from '@/components/site-header'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { fontMono, fontSans } from '@/lib/font'
-import SiteFooter from '@/components/site-footer'
+import { AuthProvider } from '@/context/auth-context'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth-options'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
   title: {
@@ -37,13 +40,14 @@ export const metadata: Metadata = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const authSession = await getServerSession(authOptions)
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={cn(
           'min-h-svh bg-background font-sans antialiased',
@@ -51,9 +55,8 @@ export default function RootLayout({
           fontMono.variable,
         )}
       >
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <AuthProvider session={authSession}>{children}</AuthProvider>
+        <Toaster richColors expand={false} closeButton />
       </body>
     </html>
   )

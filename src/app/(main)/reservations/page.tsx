@@ -5,11 +5,11 @@ import ReservationsSkeleton from '@/components/reservations-skeleton'
 import { fetchReservationsByUser } from '@/repo/reservations'
 import { ReservationFilterParams } from '@/types/reservations-filter'
 
-async function ReservationsPage({
+const ReservationsPage = async ({
   searchParams,
 }: {
   searchParams: ReservationFilterParams
-}) {
+}) => {
   const sort = searchParams.sort || 'date-desc'
 
   const reservations = await fetchReservationsByUser('001', {
