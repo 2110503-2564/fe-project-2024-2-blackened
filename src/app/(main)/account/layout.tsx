@@ -29,6 +29,9 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
               Back to home
             </Link>
           </Button>
+          <Button size='sm' asChild className='rounded-md'>
+            <Link href='/reservations'>Your reservations</Link>
+          </Button>
         </PageActions>
       </PageHeader>
       <div className='container-wrapper'>
