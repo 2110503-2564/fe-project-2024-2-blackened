@@ -46,7 +46,10 @@ const GridReservations = ({
                       Room {reservation.room.roomNumber}
                     </p>
                   </Link>
-                  <ReservationActions space_id={reservation.space._id} />
+                  <ReservationActions
+                    space_id={reservation.space._id}
+                    reservation_id={reservation._id}
+                  />
                 </div>
                 <div className='mt-4 pt-4 flex justify-between items-end'>
                   <div className='text-sm text-muted-foreground'>

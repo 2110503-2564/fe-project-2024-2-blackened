@@ -118,9 +118,6 @@ export const getReservableTime = (
         const body = await response.json()
         const timeslots = body.data as string[]
 
-        // Convert ISO date strings to HH:MM format
-
-        // Filter timeslots by requested date
         const filteredTimeslots = timeslots.filter((dateString) => {
           const timeSlotDate = new Date(dateString)
           const requestedDate = new Date(date)
@@ -154,13 +151,9 @@ export const getReservableTime = (
           (currentHour === closeHour && currentMinute < closeMinute)
         ) {
           const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
-
           const available = formattedTimeSlots.includes(time)
-
           timeSlots.push({ time, available })
-
           currentHour += 1
-
           if (currentHour !== openHour) {
             currentMinute = 0
           }

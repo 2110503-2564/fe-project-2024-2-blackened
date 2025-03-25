@@ -177,7 +177,10 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                   </CardFooter>
                 </Card>
                 {/* Small card */}
-                <div className='block sm:hidden h-[200px] rounded-xl border bg-card text-card-foreground shadow overflow-hidden'>
+                <div
+                  key={room._id}
+                  className='block sm:hidden h-[200px] rounded-xl border bg-card text-card-foreground shadow overflow-hidden'
+                >
                   <div className='h-full grid grid-cols-5 gap-2'>
                     <div className='col-span-2 relative w-full'>
                       <Image
@@ -300,7 +303,7 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
           </div>
         </div>
         <div id='booking-form'>
-          <BookingMenu space={space} />
+          <BookingMenu space={space} session={session} />
         </div>
       </div>
     </section>

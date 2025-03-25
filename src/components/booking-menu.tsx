@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Space, TimeSlots } from '@/interfaces/space.interface'
+import { Room, Space, TimeSlots } from '@/interfaces/space.interface'
 import { MouseEvent, useEffect, useState } from 'react'
 import { CalendarIcon, Clock, Coffee } from 'lucide-react'
 import {
@@ -28,8 +28,17 @@ import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { getReservableTime } from '@/repo/spaces'
 import { useBooking } from '@/context/booking-context'
+import { Session } from 'next-auth'
+import { reserveRoom } from '@/repo/reservations'
+import { toast } from 'sonner'
 
-const BookingMenu = ({ space }: { space: Space }) => {
+const BookingMenu = ({
+  space,
+  session,
+}: {
+  space: Space
+  session: Session | null
+}) => {
   const { selectedRoom, setSelectedRoom } = useBooking()
 
   const [date, setDate] = useState<Date>()
@@ -56,9 +65,27 @@ const BookingMenu = ({ space }: { space: Space }) => {
     }
   }, [selectedRoom, date, space._id])
 
-  const handleSubmit = (e: MouseEvent) => {
+  const handleSubmit = async (e: MouseEvent) => {
     e.preventDefault()
-    console.log('SUBMIT')
+    try {
+      if (!selectedRoom || !date || !session?.accessToken) {
+        return
+      }
+      const response = await reserveRoom(
+        space._id,
+        selectedRoom._id,
+        date,
+        time,
+        session.accessToken,
+      )
+      if (!response.success) {
+        toast.error('Reservation not successful')
+        return
+      }
+      toast.success('Reserved! Enjoy')
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (

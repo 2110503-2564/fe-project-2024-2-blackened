@@ -65,7 +65,10 @@ const ListReservations = ({
                   {reservation.room.price} ฿
                 </TableCell>
                 <TableCell className='text-right'>
-                  <ReservationActions space_id={reservation.space._id} />
+                  <ReservationActions
+                    space_id={reservation.space._id}
+                    reservation_id={reservation._id}
+                  />
                 </TableCell>
               </TableRow>
             ))

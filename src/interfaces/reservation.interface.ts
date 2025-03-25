@@ -11,3 +11,13 @@ export interface Reservation {
     tel: string
   }
 }
+
+export interface ReservationResponse {
+  reservationDate: string
+  user: string
+  room: string
+  space: string
+  _id: string
+  createdAt: string
+  __v: number
+}
