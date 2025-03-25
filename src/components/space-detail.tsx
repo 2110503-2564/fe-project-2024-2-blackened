@@ -67,16 +67,7 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
             <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
               <div>
                 <div className='flex gap-2 items-center'>
-                  {session?.user.role === 'admin' ? (
-                    <input
-                      type='text'
-                      defaultValue={space.name}
-                      placeholder='Space name'
-                      className='active:outline-none focus:outline-none border-b-2 border-zinc-700 pb-1 border-solid text-3xl font-bold'
-                    />
-                  ) : (
-                    <h1 className='text-3xl font-bold'>{space.name}</h1>
-                  )}
+                  <h1 className='text-3xl font-bold'>{space.name}</h1>
                 </div>
                 <div className='flex items-center mt-2 text-muted-foreground'>
                   <MapPin className='h-4 w-4 mr-1' />
@@ -94,16 +85,8 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 <div className='flex flex-col gap-5 text-lg font-medium'>
                   <div className='flex gap-2 items-center'>
                     <Smartphone className='w-6 h-6' />
-                    {session?.user.role === 'admin' ? (
-                      <input
-                        type='text'
-                        defaultValue={space.tel}
-                        placeholder='Space name'
-                        className='w-[175px] active:outline-none focus:outline-none border-b-2 border-zinc-700 border-solid'
-                      />
-                    ) : (
-                      <h1>{space.tel}</h1>
-                    )}
+
+                    <h1>{space.tel}</h1>
                   </div>
                   <div className='flex gap-2 items-center'>
                     <Clock className='w-6 h-6' />
