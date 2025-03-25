@@ -1,6 +1,5 @@
 import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
 import users from './users.json'
-import { Awaitable } from 'next-auth'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage
@@ -71,6 +70,7 @@ export const authenticateUser = (email: string, password: string) => {
             name: user.name,
             email: user.email,
             image: user.image,
+            phone: user.phone,
             role: user.role as UserRole,
           },
         })
