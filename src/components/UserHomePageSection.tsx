@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { User, CheckCircle } from 'lucide-react'
+import { User, CheckCircle, BookOpen } from 'lucide-react'
 
 const UserSection = () => {
   return (
@@ -15,7 +15,7 @@ const UserSection = () => {
         {/* Feature 1 */}
         <Card className='shadow-md'>
           <CardHeader className='flex items-center justify-center'>
-            <CheckCircle className='w-12 h-12 text-gray-700' />
+            <BookOpen className='w-12 h-12 text-gray-700' />
           </CardHeader>
           <CardContent>
             <h3 className='font-semibold'>Easy Booking</h3>
