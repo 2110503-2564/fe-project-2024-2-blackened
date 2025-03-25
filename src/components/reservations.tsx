@@ -105,7 +105,10 @@ const ReservationsClient = ({
       {layout === 'grid' ? (
         <GridReservations reservations={initialReservations} />
       ) : (
-        <ListReservations reservations={initialReservations} />
+        <ListReservations
+          reservations={initialReservations}
+          session={session}
+        />
       )}
     </div>
   )

@@ -11,18 +11,22 @@ import ReservationActions from '@/components/reservation-actions'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { Reservation } from '@/interfaces/reservation.interface'
+import { Session } from 'next-auth'
 
 const ListReservations = ({
   reservations,
+  session,
 }: {
   reservations: Reservation[]
+  session: Session | null
 }) => {
   return (
     <div className='border rounded-md'>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-2/5'>Space & Room</TableHead>
+            <TableHead className='w-[175px]'>Space & Room</TableHead>
+            {session?.user.role === 'admin' && <TableHead>User</TableHead>}
             <TableHead className='w-[200px] hidden md:table-cell'>
               Date
             </TableHead>
@@ -55,6 +59,9 @@ const ListReservations = ({
                     </div>
                   </Link>
                 </TableCell>
+                {session?.user.role === 'admin' && (
+                  <TableCell>{reservation.user.name}</TableCell>
+                )}
                 <TableCell className='hidden md:table-cell'>
                   {format(reservation.reservationDate, 'MMM d, yyyy')}
                 </TableCell>
