@@ -1,4 +1,4 @@
-import { User, UserRole } from '@/interfaces/user.interface'
+import { UserRole } from '@/interfaces/user.interface'
 import { authenticateUser } from '@/repo/users'
 import { AuthOptions } from 'next-auth'
 

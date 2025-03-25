@@ -1,6 +1,5 @@
 import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
 import users from './users.json'
-import { Awaitable } from 'next-auth'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage

@@ -16,7 +16,7 @@ import {
 import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
