@@ -234,72 +234,73 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 </div>
               </>
             ))}
-
-            <Dialog>
-              <DialogTrigger asChild>
-                <Card
-                  key='add new room'
-                  className='cursor-pointer hidden sm:flex justify-center items-center w-full pt-0 rounded-lg bg-muted'
-                >
-                  <Plus className='size-32 text-zinc-400' />
-                </Card>
-              </DialogTrigger>
-              <DialogContent className='sm:max-w-[425px]'>
-                <DialogHeader>
-                  <DialogTitle>Add room</DialogTitle>
-                  <DialogDescription>
-                    Add room description here.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className='grid gap-4 py-4'>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='name' className='text-right'>
-                      Room no.
-                    </Label>
-                    <Input
-                      id='room-no'
-                      placeholder='404'
-                      className='col-span-3'
-                    />
+            {session?.user.role === 'admin' && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Card
+                    key='add new room'
+                    className='cursor-pointer hidden sm:flex justify-center items-center w-full pt-0 rounded-lg bg-muted'
+                  >
+                    <Plus className='size-32 text-zinc-400' />
+                  </Card>
+                </DialogTrigger>
+                <DialogContent className='sm:max-w-[425px]'>
+                  <DialogHeader>
+                    <DialogTitle>Add room</DialogTitle>
+                    <DialogDescription>
+                      Add room description here.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className='grid gap-4 py-4'>
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                      <Label htmlFor='name' className='text-right'>
+                        Room no.
+                      </Label>
+                      <Input
+                        id='room-no'
+                        placeholder='404'
+                        className='col-span-3'
+                      />
+                    </div>
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                      <Label htmlFor='username' className='text-right'>
+                        Capacity
+                      </Label>
+                      <Input
+                        id='capacity'
+                        defaultValue={4}
+                        className='col-span-3'
+                      />
+                    </div>
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                      <Label htmlFor='username' className='text-right'>
+                        Price
+                      </Label>
+                      <Input
+                        id='price'
+                        defaultValue={200}
+                        className='col-span-3'
+                      />
+                    </div>
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                      <Label htmlFor='username' className='text-right'>
+                        Facilities
+                      </Label>
+                      <Input
+                        id='facilities'
+                        placeholder='Whiteboard, WiFi, Coffee'
+                        className='col-span-3'
+                      />
+                    </div>
                   </div>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='username' className='text-right'>
-                      Capacity
-                    </Label>
-                    <Input
-                      id='capacity'
-                      defaultValue={4}
-                      className='col-span-3'
-                    />
-                  </div>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='username' className='text-right'>
-                      Price
-                    </Label>
-                    <Input
-                      id='price'
-                      defaultValue={200}
-                      className='col-span-3'
-                    />
-                  </div>
-                  <div className='grid grid-cols-4 items-center gap-4'>
-                    <Label htmlFor='username' className='text-right'>
-                      Facilities
-                    </Label>
-                    <Input
-                      id='facilities'
-                      placeholder='Whiteboard, WiFi, Coffee'
-                      className='col-span-3'
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type='submit' className='cursor-pointer'>
-                    Add room
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                    <Button type='submit' className='cursor-pointer'>
+                      Add room
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </div>
         <div id='booking-form'>

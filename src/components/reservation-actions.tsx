@@ -48,6 +48,10 @@ const ReservationActions = ({
     }
   }
 
+  const handleUpdate = async (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -64,10 +68,12 @@ const ReservationActions = ({
             View Space Details
           </DropdownMenuItem>
         </Link>
+
         <DropdownMenuItem>
           <Calendar className='mr-2 h-4 w-4' />
           Reschedule
         </DropdownMenuItem>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem className='text-red-600' onClick={handleDelete}>
           <X className='mr-2 h-4 w-4 text-red-600' />

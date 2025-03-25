@@ -46,6 +46,7 @@ const GridReservations = ({
                       Room {reservation.room.roomNumber}
                     </p>
                   </Link>
+
                   <ReservationActions
                     space_id={reservation.space._id}
                     reservation_id={reservation._id}
