@@ -1,5 +1,8 @@
+import { Pagination } from './interface'
+
 export interface Room {
   _id: string
+  image: string
   roomNumber: string
   capacity: number
   price: number
@@ -11,6 +14,7 @@ export interface Space {
   name: string
   address: string
   district: string
+  image: string
   province: string
   postalcode: string
   tel: string
@@ -22,4 +26,9 @@ export interface Space {
 export interface TimeSlots {
   time: string
   available: boolean
+}
+
+export interface SpacesPagination {
+  spaces: Space[]
+  pagination: Pagination
 }

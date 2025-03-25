@@ -21,6 +21,7 @@ import { ReservationFilterParams } from '@/types/reservations-filter'
 const ReservationsClient = ({
   initialReservations,
   initialSort,
+  session,
 }: ReservationsClientProps) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -62,12 +63,12 @@ const ReservationsClient = ({
               <DropdownMenuItem
                 onClick={() => updateFilters({ sort: 'date-desc' })}
               >
-                Date (Newest First)
+                Date Descending
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => updateFilters({ sort: 'date-asc' })}
               >
-                Date (Oldest First)
+                Date Ascending
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => updateFilters({ sort: 'price-desc' })}

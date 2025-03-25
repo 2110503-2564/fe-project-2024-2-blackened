@@ -1,4 +1,5 @@
 import { Reservation } from '@/interfaces/reservation.interface'
+import { Session } from 'next-auth'
 
 export interface Pagination {
   total: number
@@ -27,4 +28,11 @@ export interface CommandsConfig {
 export interface ReservationsClientProps {
   initialReservations: Reservation[]
   initialSort: string
+  session: Session | null
+}
+
+export interface APIResponse<T> {
+  success: boolean
+  message?: string
+  data: T
 }

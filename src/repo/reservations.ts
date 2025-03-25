@@ -8,10 +8,25 @@ import { ReservationFilterParams } from '@/types/reservations-filter'
  */
 
 export const fetchReservations = () => {
-  return new Promise<Reservation[]>((resolve) => {
-    setTimeout(() => {
-      resolve(reservations as Reservation[])
-    }, 300)
+  return new Promise<Reservation[]>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations`,
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Fetch failed')
+      }
+
+      const body = await response.json()
+
+      resolve(body.data as Reservation[])
+    } catch (error) {
+      reject(
+        error instanceof Error ? error : new Error('Fetch reservation failed'),
+      )
+    }
   })
 }
 
@@ -31,40 +46,30 @@ export const getReservationById = (id: string) => {
 }
 
 export const fetchReservationsByUser = (
-  userId: string,
+  token: string,
   filters: ReservationFilterParams = {},
 ) => {
-  return new Promise<Reservation[]>((resolve) => {
-    setTimeout(() => {
-      const filtered = reservations.filter((res) => res.user === userId)
-
-      if (filters.sort) {
-        switch (filters.sort) {
-          case 'date-desc':
-            filtered.sort(
-              (a, b) =>
-                new Date(b.reservationDate).getTime() -
-                new Date(a.reservationDate).getTime(),
-            )
-            break
-          case 'date-asc':
-            filtered.sort(
-              (a, b) =>
-                new Date(a.reservationDate).getTime() -
-                new Date(b.reservationDate).getTime(),
-            )
-            break
-          case 'price-desc':
-            filtered.sort((a, b) => b.room.price - a.room.price)
-            break
-          case 'price-asc':
-            filtered.sort((a, b) => a.room.price - b.room.price)
-            break
-        }
+  return new Promise<Reservation[]>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/reservations?sort=${filters.sort}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Fetch failed')
       }
 
-      resolve(filtered as Reservation[])
-    }, 300)
+      const body = await response.json()
+      resolve(body.data as Reservation[])
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to fetch'))
+    }
   })
 }
 

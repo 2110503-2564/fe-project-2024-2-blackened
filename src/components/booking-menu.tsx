@@ -42,6 +42,8 @@ const BookingMenu = ({ space }: { space: Space }) => {
         const ts = await getReservableTime(
           space._id,
           selectedRoom?._id,
+          space.opentime,
+          space.closetime,
           date?.toString(),
         )
         setTimeslots(ts)

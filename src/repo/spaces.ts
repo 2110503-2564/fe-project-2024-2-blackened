@@ -1,64 +1,53 @@
-import { Space } from '@/interfaces/space.interface'
 import spaces from './spaces.json'
-import { Pagination } from '@/interfaces/interface'
+import {
+  Space,
+  SpacesPagination,
+  TimeSlots,
+} from '@/interfaces/space.interface'
+import { APIResponse, Pagination } from '@/interfaces/interface'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage
  */
 
-export const fetchSpaces = () => {
-  return new Promise<Space[]>((resolve) => {
-    setTimeout(() => {
-      resolve(spaces as Space[])
-    }, 300)
+export const fetchSpaces = (page: number = 1, limit: number = 6) => {
+  return new Promise<SpacesPagination>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces?page=${page}&limit=${limit}`,
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Fetch spaces failed')
+      }
+
+      const body = await response.json()
+      resolve(body.data as SpacesPagination)
+    } catch (error) {
+      reject(error instanceof Error ? error : new Error('Fetch spaces failed'))
+    }
   })
 }
 
 export const getSpaceById = (id: string) => {
-  return new Promise<Space>((resolve, reject) => {
-    setTimeout(() => {
-      const space = spaces.find((space) => space._id === id)
-      if (space) {
-        resolve(space as Space)
-      } else {
-        reject(new Error(`Space with id ${id} not found`))
+  return new Promise<Space>(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${id}`,
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Fetch failed')
       }
-    }, 300)
-  })
-}
 
-export const fetchSpacesWithPagination = (
-  page: number = 1,
-  limit: number = 8,
-) => {
-  return new Promise<{
-    spaces: Space[]
-    pagination: Pagination
-  }>((resolve) => {
-    setTimeout(() => {
-      const currentPage = Math.max(1, page)
-      const itemsPerPage = Math.max(1, limit)
+      const body = await response.json()
 
-      const startIndex = (currentPage - 1) * itemsPerPage
-      const endIndex = startIndex + itemsPerPage
-
-      const totalSpaces = spaces.length
-      const totalPages = Math.ceil(totalSpaces / itemsPerPage)
-
-      const paginatedSpaces = spaces.slice(startIndex, endIndex)
-
-      resolve({
-        spaces: paginatedSpaces as Space[],
-        pagination: {
-          total: totalSpaces,
-          page: currentPage,
-          limit: itemsPerPage,
-          totalPages,
-          hasNextPage: currentPage < totalPages,
-          hasPrevPage: currentPage > 1,
-        },
-      })
-    }, 300)
+      resolve(body.data as Space)
+    } catch (error) {
+      reject(error instanceof Error ? error : new Error('Update failed'))
+    }
   })
 }
 
@@ -110,62 +99,79 @@ export const searchSpaces = (
 export const getReservableTime = (
   spaceId: string,
   roomId: string,
+  opentime: string,
+  closetime: string,
   date: string,
 ) => {
-  return new Promise<{ time: string; available: boolean }[]>((resolve) => {
-    setTimeout(() => {
-      const space = spaces.find((space) => space._id === spaceId)
+  return new Promise<{ time: string; available: boolean }[]>(
+    async (resolve, reject) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${spaceId}/rooms/${roomId}/reservations`,
+        )
 
-      if (!roomId) {
-        resolve([])
-        return
-      }
-
-      if (!date || date.trim() === '') {
-        resolve([])
-        return
-      }
-
-      if (!space) {
-        resolve([])
-        return
-      }
-
-      const room = space.rooms.find((room) => room._id === roomId)
-
-      if (!room) {
-        resolve([])
-        return
-      }
-
-      const openHour = parseInt(space.opentime.substring(0, 2))
-      const openMinute = parseInt(space.opentime.substring(2, 4))
-      const closeHour = parseInt(space.closetime.substring(0, 2))
-      const closeMinute = parseInt(space.closetime.substring(2, 4))
-
-      const timeSlots = []
-
-      let currentHour = openHour
-      let currentMinute = openMinute
-
-      while (
-        currentHour < closeHour ||
-        (currentHour === closeHour && currentMinute < closeMinute)
-      ) {
-        const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
-
-        const available = Math.random() > 0.3
-
-        timeSlots.push({ time, available })
-
-        currentHour += 1
-
-        if (currentHour !== openHour) {
-          currentMinute = 0
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.message || 'Failed to fetch time slots')
         }
-      }
 
-      resolve(timeSlots)
-    }, 300)
-  })
+        const body = await response.json()
+        const timeslots = body.data as string[]
+
+        // Convert ISO date strings to HH:MM format
+
+        // Filter timeslots by requested date
+        const filteredTimeslots = timeslots.filter((dateString) => {
+          const timeSlotDate = new Date(dateString)
+          const requestedDate = new Date(date)
+
+          return (
+            timeSlotDate.getFullYear() === requestedDate.getFullYear() &&
+            timeSlotDate.getMonth() === requestedDate.getMonth() &&
+            timeSlotDate.getDate() === requestedDate.getDate()
+          )
+        })
+
+        const formattedTimeSlots = filteredTimeslots.map((dateString) => {
+          const _date = new Date(dateString)
+          const hours = _date.getHours().toString().padStart(2, '0')
+          const minutes = _date.getMinutes().toString().padStart(2, '0')
+          return `${hours}:${minutes}`
+        })
+
+        const openHour = parseInt(opentime.substring(0, 2))
+        const openMinute = parseInt(opentime.substring(2, 4))
+        const closeHour = parseInt(closetime.substring(0, 2))
+        const closeMinute = parseInt(closetime.substring(2, 4))
+
+        let currentHour = openHour
+        let currentMinute = openMinute
+
+        const timeSlots = []
+
+        while (
+          currentHour < closeHour ||
+          (currentHour === closeHour && currentMinute < closeMinute)
+        ) {
+          const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`
+
+          const available = formattedTimeSlots.includes(time)
+
+          timeSlots.push({ time, available })
+
+          currentHour += 1
+
+          if (currentHour !== openHour) {
+            currentMinute = 0
+          }
+        }
+
+        resolve(timeSlots as TimeSlots[])
+
+        return
+      } catch (e) {
+        reject(e instanceof Error ? e : new Error('Failed to fetch time slots'))
+      }
+    },
+  )
 }

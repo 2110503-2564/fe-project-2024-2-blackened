@@ -19,14 +19,28 @@ import {
   Clock,
   Coins,
   MapPin,
+  Plus,
   Smartphone,
   Users,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { Input } from './ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog'
+import { Label } from './ui/label'
 
 const SpaceDetailClient = ({ space }: { space: Space }) => {
   const { setSelectedRoom } = useBooking()
+  const { data: session } = useSession()
 
   return (
     <section id='booking'>
@@ -41,9 +55,10 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
         <div className='lg:col-span-2'>
           <AspectRatio ratio={16 / 9}>
             <Image
-              src='https://placehold.co/1200x800.png'
+              src={`/spaces${space.image}`}
               alt='Card Image'
               fill
+              priority
               className='rounded-lg object-cover'
             />
           </AspectRatio>
@@ -51,7 +66,18 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
           <div className='mt-6'>
             <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
               <div>
-                <h1 className='text-3xl font-bold'>{space.name}</h1>
+                <div className='flex gap-2 items-center'>
+                  {session?.user.role === 'admin' ? (
+                    <input
+                      type='text'
+                      defaultValue={space.name}
+                      placeholder='Space name'
+                      className='active:outline-none focus:outline-none border-b-2 border-zinc-700 pb-1 border-solid text-3xl font-bold'
+                    />
+                  ) : (
+                    <h1 className='text-3xl font-bold'>{space.name}</h1>
+                  )}
+                </div>
                 <div className='flex items-center mt-2 text-muted-foreground'>
                   <MapPin className='h-4 w-4 mr-1' />
                   <span>{`${space.address}, ${space.district}, ${space.province}`}</span>
@@ -68,7 +94,16 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 <div className='flex flex-col gap-5 text-lg font-medium'>
                   <div className='flex gap-2 items-center'>
                     <Smartphone className='w-6 h-6' />
-                    {space.tel}
+                    {session?.user.role === 'admin' ? (
+                      <input
+                        type='text'
+                        defaultValue={space.tel}
+                        placeholder='Space name'
+                        className='w-[175px] active:outline-none focus:outline-none border-b-2 border-zinc-700 border-solid'
+                      />
+                    ) : (
+                      <h1>{space.tel}</h1>
+                    )}
                   </div>
                   <div className='flex gap-2 items-center'>
                     <Clock className='w-6 h-6' />
@@ -93,7 +128,7 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 >
                   <AspectRatio ratio={16 / 9}>
                     <Image
-                      src='https://placehold.co/600x400.png'
+                      src={`/spaces${room.image}`}
                       alt='Card Image'
                       fill
                       className='rounded-t-md object-cover'
@@ -196,6 +231,72 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 </div>
               </>
             ))}
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Card
+                  key='add new room'
+                  className='cursor-pointer hidden sm:flex justify-center items-center w-full pt-0 rounded-lg bg-muted'
+                >
+                  <Plus className='size-32 text-zinc-400' />
+                </Card>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-[425px]'>
+                <DialogHeader>
+                  <DialogTitle>Add room</DialogTitle>
+                  <DialogDescription>
+                    Add room description here.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className='grid gap-4 py-4'>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='name' className='text-right'>
+                      Room no.
+                    </Label>
+                    <Input
+                      id='room-no'
+                      placeholder='404'
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='username' className='text-right'>
+                      Capacity
+                    </Label>
+                    <Input
+                      id='capacity'
+                      defaultValue={4}
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='username' className='text-right'>
+                      Price
+                    </Label>
+                    <Input
+                      id='price'
+                      defaultValue={200}
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='username' className='text-right'>
+                      Facilities
+                    </Label>
+                    <Input
+                      id='facilities'
+                      placeholder='Whiteboard, WiFi, Coffee'
+                      className='col-span-3'
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type='submit' className='cursor-pointer'>
+                    Add room
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <div id='booking-form'>

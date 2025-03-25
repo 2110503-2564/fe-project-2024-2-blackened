@@ -1,6 +1,4 @@
 import { User, UserAuthResponse, UserRole } from '@/interfaces/user.interface'
-import users from './users.json'
-import { JWT } from 'next-auth/jwt'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage

@@ -9,19 +9,17 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { SpacesPageProps } from '@/interfaces/interface'
-import { fetchSpacesWithPagination } from '@/repo/spaces'
+import { fetchSpaces } from '@/repo/spaces'
 import { Clock, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 6
 
 const SpacesPage = async ({ searchParams }: SpacesPageProps) => {
   const currentPage = searchParams?.page ? parseInt(searchParams.page) : 1
-  const { spaces, pagination } = await fetchSpacesWithPagination(
-    currentPage,
-    ITEMS_PER_PAGE,
-  )
+  const { spaces, pagination } = await fetchSpaces(currentPage, ITEMS_PER_PAGE)
 
   return (
     <div className='flex flex-col gap-8'>
@@ -34,12 +32,20 @@ const SpacesPage = async ({ searchParams }: SpacesPageProps) => {
             >
               <div className='relative bg-muted block'>
                 <AspectRatio ratio={16 / 9}>
-                  <Image
-                    src='https://placehold.co/600x400.png'
-                    alt='Card Image'
-                    fill
-                    className='rounded-t-md object-cover'
-                  />
+                  <Suspense
+                    fallback={
+                      <div className='bg-black size-full'>TESTSETETSET</div>
+                    }
+                  >
+                    <Image
+                      key={space._id}
+                      src={`/spaces${space.image}`}
+                      alt='Card Image'
+                      fill
+                      loading='lazy'
+                      className='rounded-t-md object-cover'
+                    />
+                  </Suspense>
                 </AspectRatio>
               </div>
               <CardContent className='space-y-4'>
