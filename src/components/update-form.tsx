@@ -17,6 +17,8 @@ import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { toast } from 'sonner'
+import { updateUserProfile } from '@/repo/users'
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -37,7 +39,7 @@ const formSchema = z.object({
 })
 
 const UpdateForm = () => {
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,9 +52,42 @@ const UpdateForm = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
+
+    try {
+      if (!session || !session.accessToken) throw new Error('Unauthenticated')
+      const response = await updateUserProfile(
+        session.user._id,
+        {
+          name: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          phone: values.phone,
+        },
+        session.accessToken,
+      )
+
+      if (!response.success) {
+        toast.error(response.message)
+        return
+      }
+
+      await update({
+        user: {
+          ...session.user,
+          name: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          phone: values.phone,
+        },
+      })
+
+      toast.success('Updated')
+    } catch (error) {
+      toast.error('Something went wrong, Please try again')
+      console.error('Update error:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

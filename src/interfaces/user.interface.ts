@@ -14,6 +14,7 @@ export interface User {
 
 export interface UserAuthResponse {
   success: boolean
+  message?: string
   data: {
     token: string
     _id: string
