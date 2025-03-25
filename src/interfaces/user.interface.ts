@@ -19,6 +19,7 @@ export interface UserAuthResponse {
     _id: string
     name: string
     email: string
+    phone: string
     role: UserRole
     image?: string
   }

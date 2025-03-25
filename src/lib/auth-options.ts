@@ -60,6 +60,7 @@ export const authOptions: AuthOptions = {
         token.role = user.role
         token.accessToken = user.token
         token.image = user.image
+        token.phone = user.phone
       }
       return token
     },
@@ -71,6 +72,7 @@ export const authOptions: AuthOptions = {
         session.user.role = token.role as UserRole
         session.accessToken = token.accessToken as string
         session.user.image = token.image
+        session.user.phone = token.phone
       }
       return session
     },

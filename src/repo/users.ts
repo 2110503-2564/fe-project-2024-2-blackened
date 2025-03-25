@@ -71,6 +71,7 @@ export const authenticateUser = (email: string, password: string) => {
             name: user.name,
             email: user.email,
             image: user.image,
+            phone: user.phone,
             role: user.role as UserRole,
           },
         })
