@@ -201,6 +201,13 @@
     background: hsl(var(--border));
     border-radius: 5px;
   }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
   * {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;

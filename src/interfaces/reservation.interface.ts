@@ -12,6 +12,7 @@ export interface Reservation {
     _id: string
     name: string
     tel: string
+    image: string
   }
 }
 

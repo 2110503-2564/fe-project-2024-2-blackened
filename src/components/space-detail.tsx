@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   Clock,
   Coins,
+  Loader2,
   MapPin,
   Plus,
   Smartphone,
@@ -35,12 +36,74 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog'
-import { Label } from './ui/label'
+} from '@/components/ui/dialog'
+
+import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { toast } from 'sonner'
+import { addRoom } from '@/repo/spaces'
+import { useRouter } from 'next/navigation'
+
+const formSchema = z.object({
+  roomNumber: z.string().min(1, {
+    message: 'Room number must be at least 1 character.',
+  }),
+  capacity: z.coerce
+    .number()
+    .positive({ message: 'Capacity must be a positive number' }),
+  price: z.coerce
+    .number()
+    .nonnegative({ message: 'Price must be a non-negative number' }),
+  facilities: z
+    .string()
+    .refine((value) => /^[a-zA-Z0-9\s]+(,[a-zA-Z0-9\s]+)*$/.test(value), {
+      message:
+        'Facilities must be a comma-separated list (e.g., "Whiteboard, WiFi, Coffee")',
+    })
+    .transform((val) => val.split(',').map((item) => item.trim())),
+})
 
 const SpaceDetailClient = ({ space }: { space: Space }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+
   const { setSelectedRoom } = useBooking()
   const { data: session } = useSession()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      roomNumber: '',
+      capacity: 4,
+      price: 200,
+      facilities: undefined,
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true)
+    try {
+      if (!session?.accessToken) throw new Error('Unauthorized')
+      await addRoom(space._id, values, session.accessToken)
+
+      toast.success('Room created.')
+      router.refresh()
+    } catch (e) {
+      toast.error('Room creation failed')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <section id='booking'>
@@ -104,14 +167,14 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
           <Separator className='my-6' />
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
             {space.rooms.map((room) => (
-              <>
+              <div key={room._id}>
                 <Card
                   key={room._id}
                   className='hidden sm:flex w-full pt-0 rounded-lg'
                 >
                   <AspectRatio ratio={16 / 9}>
                     <Image
-                      src={`/spaces${room.image}`}
+                      src={`/spaces${room.image}` || '/spaces/placehold.jpg'}
                       alt='Card Image'
                       fill
                       className='rounded-t-md object-cover'
@@ -161,13 +224,13 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                 </Card>
                 {/* Small card */}
                 <div
-                  key={room._id}
+                  key={room._id + ' small'}
                   className='block sm:hidden h-[200px] rounded-xl border bg-card text-card-foreground shadow overflow-hidden'
                 >
                   <div className='h-full grid grid-cols-5 gap-2'>
                     <div className='col-span-2 relative w-full'>
                       <Image
-                        src='https://placehold.co/600x400.png'
+                        src={`/spaces${room.image}` || '/spaces/placehold.jpg'}
                         alt='Card Image'
                         fill
                         className='rounded-l-md object-cover'
@@ -215,72 +278,120 @@ const SpaceDetailClient = ({ space }: { space: Space }) => {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             ))}
             {session?.user.role === 'admin' && (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Card
-                    key='add new room'
-                    className='cursor-pointer hidden sm:flex justify-center items-center w-full pt-0 rounded-lg bg-muted'
-                  >
-                    <Plus className='size-32 text-zinc-400' />
-                  </Card>
-                </DialogTrigger>
-                <DialogContent className='sm:max-w-[425px]'>
-                  <DialogHeader>
-                    <DialogTitle>Add room</DialogTitle>
-                    <DialogDescription>
-                      Add room description here.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className='grid gap-4 py-4'>
-                    <div className='grid grid-cols-4 items-center gap-4'>
-                      <Label htmlFor='name' className='text-right'>
-                        Room no.
-                      </Label>
-                      <Input
-                        id='room-no'
-                        placeholder='404'
-                        className='col-span-3'
-                      />
-                    </div>
-                    <div className='grid grid-cols-4 items-center gap-4'>
-                      <Label htmlFor='username' className='text-right'>
-                        Capacity
-                      </Label>
-                      <Input
-                        id='capacity'
-                        defaultValue={4}
-                        className='col-span-3'
-                      />
-                    </div>
-                    <div className='grid grid-cols-4 items-center gap-4'>
-                      <Label htmlFor='username' className='text-right'>
-                        Price
-                      </Label>
-                      <Input
-                        id='price'
-                        defaultValue={200}
-                        className='col-span-3'
-                      />
-                    </div>
-                    <div className='grid grid-cols-4 items-center gap-4'>
-                      <Label htmlFor='username' className='text-right'>
-                        Facilities
-                      </Label>
-                      <Input
-                        id='facilities'
-                        placeholder='Whiteboard, WiFi, Coffee'
-                        className='col-span-3'
-                      />
+                  <div className='h-[387px]'>
+                    <Card
+                      key='add new room'
+                      className='cursor-pointer hidden sm:flex h-full justify-center items-center w-full pt-0 rounded-lg bg-muted'
+                    >
+                      <Plus className='size-32 text-zinc-400' />
+                    </Card>
+                    <div
+                      key='add new room small'
+                      className='cursor-pointer block sm:hidden h-[200px] rounded-xl border bg-card text-card-foreground shadow overflow-hidden'
+                    >
+                      <div className='w-full h-full flex items-center justify-center bg-muted'>
+                        <Plus className='size-16 text-zinc-400' />
+                      </div>
                     </div>
                   </div>
-                  <DialogFooter>
-                    <Button type='submit' className='cursor-pointer'>
-                      Add room
-                    </Button>
-                  </DialogFooter>
+                </DialogTrigger>
+                <DialogContent className='sm:max-w-[425px]'>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                      <DialogHeader>
+                        <DialogTitle>Add new room</DialogTitle>
+                        <DialogDescription>
+                          Enter room information to add room.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className='grid gap-4 py-4'>
+                        <FormField
+                          control={form.control}
+                          name='roomNumber'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Room no.</FormLabel>
+                              <FormControl>
+                                <Input placeholder='404' {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name='capacity'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Capacity</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type='number'
+                                  placeholder='4'
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name='price'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Price</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type='number'
+                                  placeholder='200'
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name='facilities'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Facilities</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder='Whiteboard, WiFi, Coffee'
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <DialogFooter className='mt-6'>
+                        <Button
+                          type='submit'
+                          className='cursor-pointer'
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <>
+                              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                              Creating a room...
+                            </>
+                          ) : (
+                            'Add room'
+                          )}
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </Form>
                 </DialogContent>
               </Dialog>
             )}

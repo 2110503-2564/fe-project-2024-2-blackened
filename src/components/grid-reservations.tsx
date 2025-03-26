@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Calendar, Clock } from 'lucide-react'
+import { Calendar, Clock, User } from 'lucide-react'
 import ReservationActions from '@/components/reservation-actions'
 
 import Link from 'next/link'
@@ -29,7 +29,11 @@ const GridReservations = ({
               <div className='relative bg-muted block'>
                 <AspectRatio ratio={16 / 9}>
                   <Image
-                    src='https://placehold.co/600x400.png'
+                    src={
+                      reservation.space.image
+                        ? `/spaces${reservation.space.image}`
+                        : '/spaces/placehold.jpg'
+                    }
                     alt='Card Image'
                     fill
                     className='rounded-t-md object-cover'
@@ -56,6 +60,10 @@ const GridReservations = ({
                 </div>
                 <div className='mt-4 pt-4 flex justify-between items-end'>
                   <div className='text-sm text-muted-foreground'>
+                    <div className='flex gap-2 items-center'>
+                      <User className='w-4 h-4' />
+                      {reservation.user.name}
+                    </div>
                     <div className='flex gap-2 items-center'>
                       <Calendar className='w-4 h-4' />
                       {format(reservation.reservationDate, 'MMM d, yyyy')}

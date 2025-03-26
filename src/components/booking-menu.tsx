@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Room, Space, TimeSlots } from '@/interfaces/space.interface'
+import { Space, TimeSlots } from '@/interfaces/space.interface'
 import { MouseEvent, useEffect, useState } from 'react'
 import { CalendarIcon, Clock, Coffee } from 'lucide-react'
 import {
@@ -63,7 +63,7 @@ const BookingMenu = ({
       setTimeslots([])
       setTime('')
     }
-  }, [selectedRoom, date, space._id])
+  }, [selectedRoom, date, space._id, space.opentime, space.closetime])
 
   const handleSubmit = async (e: MouseEvent) => {
     e.preventDefault()
@@ -84,7 +84,11 @@ const BookingMenu = ({
       }
       toast.success('Reserved! Enjoy')
     } catch (e) {
-      console.log(e)
+      if (e instanceof Error && e.message.includes('exceeded the maximum')) {
+        toast.error('Exceeded the maximum number of reservations')
+      } else {
+        toast.error('Something went wrong!')
+      }
     }
   }
 

@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { updateUserProfile } from '@/repo/users'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -32,15 +33,13 @@ const formSchema = z.object({
   }),
   phone: z
     .string()
-    .transform((val) => val.replace(/\D/g, ''))
-    .refine((val) => val.length === 10, {
-      message: 'Phone number must be exactly 10 digits.',
-    }),
+    .length(10, { message: 'Phone number must be exactly 10 digits.' }),
 })
 
 const UpdateForm = () => {
   const { data: session, update } = useSession()
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -87,6 +86,7 @@ const UpdateForm = () => {
       console.error('Update error:', error)
     } finally {
       setIsLoading(false)
+      router.refresh()
     }
   }
 
@@ -175,7 +175,7 @@ const UpdateForm = () => {
               {isLoading ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                  Creating Account...
+                  Updating Account...
                 </>
               ) : (
                 'Update Account'

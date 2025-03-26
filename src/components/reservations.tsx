@@ -43,6 +43,7 @@ const ReservationsClient = ({
 
     const queryString = params.toString() ? `?${params.toString()}` : ''
     router.push(`${pathname}${queryString}`)
+    router.refresh()
   }
 
   return (

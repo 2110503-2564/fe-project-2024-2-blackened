@@ -1,9 +1,9 @@
 import {
+  Room,
   Space,
   SpacesPagination,
   TimeSlots,
 } from '@/interfaces/space.interface'
-import { Pagination } from '@/interfaces/interface'
 
 /*  currently using mockup data
  *  TODO: Implement Backend API Usage
@@ -121,4 +121,34 @@ export const getReservableTime = (
       }
     },
   )
+}
+
+export const addRoom = (
+  space_id: string,
+  room: Partial<Room>,
+  token: string,
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/v1/spaces/${space_id}/rooms`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(room),
+        },
+      )
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to add a room')
+      }
+
+      resolve({})
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error('Failed to add a room'))
+    }
+  })
 }
